@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أحلى جمعة صديقات 🌸</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #0d0a1a;
+    min-height: 100vh;
+    overflow-x: hidden;
+    direction: rtl;
+  }
+
+  #stars-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+  }
+
+  #page-home {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; z-index: 1;
+    padding: 2rem 1rem;
+  }
+
+  .home-title {
+    color: #f9c8d9;
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 30px rgba(255,150,180,0.5);
+  }
+
+  .hearts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.4rem;
+    justify-content: center;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .heart-card {
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0.45rem;
+    transition: transform 0.3s ease;
+  }
+
+  .heart-card:hover { transform: scale(1.12) translateY(-5px); }
+  .heart-card:hover .heart-svg { filter: drop-shadow(0 0 18px rgba(255,120,160,0.8)); }
+
+  .heart-svg {
+    width: clamp(75px, 11vw, 105px);
+    height: clamp(75px, 11vw, 105px);
+    transition: filter 0.3s ease;
+    filter: drop-shadow(0 0 8px rgba(255,100,140,0.4));
+    animation: heartbeat 2.2s ease-in-out infinite;
+  }
+
+  .heart-card:nth-child(2n) .heart-svg { animation-delay: 0.35s; }
+  .heart-card:nth-child(3n) .heart-svg { animation-delay: 0.7s; }
+  .heart-card:nth-child(4n) .heart-svg { animation-delay: 1.05s; }
+  .heart-card:nth-child(5n) .heart-svg { animation-delay: 1.4s; }
+
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    14% { transform: scale(1.08); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.05); }
+    56% { transform: scale(1); }
+  }
+
+  #page-invitation {
+    display: none; min-height: 100vh;
+    position: relative; z-index: 1;
+    align-items: center; justify-content: center;
+    padding: 2rem 1rem;
+  }
+  #page-invitation.active { display: flex; flex-direction: column; }
+
+  .big-heart-container {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    width: min(95vw, 700px); position: relative;
+  }
+
+  .big-heart-wrap { position: relative; width: 100%; max-width: 440px; }
+
+  .big-heart-svg {
+    width: 100%; height: auto;
+    filter: drop-shadow(0 0 40px rgba(255,80,130,0.5));
+    animation: bigHeartbeat 2.5s ease-in-out infinite;
+  }
+
+  @keyframes bigHeartbeat {
+    0%,100% { transform: scale(1); }
+    15% { transform: scale(1.03); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.02); }
+    60% { transform: scale(1); }
+  }
+
+  .heart-content {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -52%);
+    text-align: center; width: 70%;
+    pointer-events: none;
+  }
+
+  .inv-text {
+    color: rgba(255,255,255,0.92);
+    font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+    font-weight: 500; line-height: 1.7;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    white-space: pre-line;
+  }
+
+  .challenge-btn {
+    margin-top: 1.8rem;
+    background: linear-gradient(135deg, #ff4d8d, #c2185b);
+    color: white; border: none;
+    padding: 1rem 2.5rem; border-radius: 50px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255,80,140,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .challenge-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(255,80,140,0.55); }
+  .challenge-btn:active { transform: scale(0.97); }
+
+  #page-challenge {
+    display: none; min-height: 100vh;
+    position: relative; z-index: 1;
+    align-items: center; justify-content: center;
+    padding: 2rem 1rem;
+  }
+  #page-challenge.active { display: flex; flex-direction: column; }
+
+  .challenge-box {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,150,180,0.2);
+    border-radius: 24px;
+    padding: 2rem 1.5rem;
+    max-width: 520px; width: 100%;
+    text-align: center;
+  }
+
+  .challenge-title {
+    color: #f9c8d9;
+    font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+    font-weight: 700; margin-bottom: 0.4rem;
+  }
+
+  .challenge-inst {
+    color: #c9a0bc;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .phrase-display {
+    background: rgba(255,100,140,0.08);
+    border: 1px solid rgba(255,100,140,0.2);
+    border-radius: 14px;
+    padding: 1.4rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    line-height: 2; font-weight: 500;
+  }
+
+  .phrase-single {
+    color: #ffd6e7;
+    font-size: clamp(1rem, 3vw, 1.15rem);
+    font-weight: 700;
+    display: block;
+  }
+
+  .answer-btns {
+    display: flex; gap: 1rem;
+    justify-content: center; flex-wrap: wrap;
+  }
+
+  .btn-correct {
+    background: linear-gradient(135deg, #2e7d32, #43a047);
+    color: white; border: none;
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+    font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(66,160,75,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-wrong {
+    background: linear-gradient(135deg, #b71c1c, #e53935);
+    color: white; border: none;
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+    font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(229,57,53,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-correct:hover, .btn-wrong:hover { transform: translateY(-3px); }
+  .btn-correct:active, .btn-wrong:active { transform: scale(0.97); }
+
+  #result-overlay {
+    display: none; position: fixed; inset: 0;
+    z-index: 100; align-items: center; justify-content: center;
+    padding: 2rem;
+    background: rgba(13,10,26,0.88);
+    backdrop-filter: blur(4px);
+  }
+  #result-overlay.active { display: flex; }
+
+  .result-box {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,150,180,0.25);
+    border-radius: 24px; padding: 2.5rem 2rem;
+    max-width: 380px; width: 100%;
+    text-align: center;
+  }
+
+  .result-emoji { font-size: 3.5rem; margin-bottom: 0.8rem; display: block; }
+
+  .result-title {
+    font-size: clamp(1.3rem, 4vw, 1.7rem);
+    font-weight: 900; margin-bottom: 1.8rem;
+  }
+  .result-title.success { color: #81c784; }
+  .result-title.fail { color: #ef9a9a; }
+
+  .back-home-btn {
+    background: linear-gradient(135deg, #8e24aa, #c2185b);
+    color: white; border: none;
+    width: 54px; height: 54px; border-radius: 50%;
+    font-size: 1.6rem; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(194,24,91,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .back-home-btn:hover { transform: translateY(-3px) scale(1.08); box-shadow: 0 8px 28px rgba(194,24,91,0.5); }
+
+  .confetti-piece {
+    position: fixed; border-radius: 2px;
+    z-index: 200; pointer-events: none;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  .float-heart {
+    position: fixed; pointer-events: none;
+    z-index: 0; opacity: 0;
+    animation: floatUp linear forwards;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    20% { opacity: 0.6; } 80% { opacity: 0.3; }
+    100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+  }
+
+  .back-arrow {
+    position: fixed; top: 1.2rem; right: 1.2rem;
+    z-index: 50;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,150,180,0.2);
+    border-radius: 50%; width: 44px; height: 44px;
+    display: none; align-items: center; justify-content: center;
+    cursor: pointer; color: #f0c0d5; font-size: 1.2rem;
+    transition: background 0.2s;
+  }
+  .back-arrow.visible { display: flex; }
+  .back-arrow:hover { background: rgba(255,255,255,0.14); }
+
+  .sparkle {
+    position: fixed; pointer-events: none;
+    z-index: 5; animation: sparkleAnim 0.7s ease forwards;
+  }
+  @keyframes sparkleAnim {
+    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.3) rotate(180deg); opacity: 0.8; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<button class="back-arrow" id="back-arrow" onclick="goHome()">←</button>
+
+<!-- HOME PAGE -->
+<div id="page-home">
+  <h1 class="home-title">🌸 أحلى جمعة صديقات 🌸</h1>
+  <div class="hearts-grid" id="hearts-grid"></div>
+</div>
+
+<!-- INVITATION PAGE -->
+<div id="page-invitation">
+  <div class="big-heart-container">
+    <div class="big-heart-wrap">
+      <svg class="big-heart-svg" viewBox="0 0 500 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ff4d8d"/>
+            <stop offset="50%" style="stop-color:#c2185b"/>
+            <stop offset="100%" style="stop-color:#e91e63"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M250 420 C250 420 30 300 30 160 C30 80 90 30 160 50 C200 60 230 85 250 110 C270 85 300 60 340 50 C410 30 470 80 470 160 C470 300 250 420 250 420Z"
+          fill="url(#heartGrad)" filter="url(#glow)"/>
+        <path d="M250 400 C250 400 55 290 55 165 C55 95 108 52 168 68 C202 77 232 100 250 122"
+          fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="165" cy="110" r="40" fill="rgba(255,255,255,0.06)"/>
+      </svg>
+      <div class="heart-content">
+        <div class="inv-text" id="inv-text"></div>
+      </div>
+    </div>
+    <button class="challenge-btn" onclick="startChallenge()">
+      انبسطتِ بالدعوة؟ يالله وقت التحدي! 🎯
+    </button>
+  </div>
+</div>
+
+<!-- CHALLENGE PAGE -->
+<div id="page-challenge">
+  <div class="challenge-box">
+    <h2 class="challenge-title">🏆 تحدي التكرار</h2>
+    <p class="challenge-inst">كرري هذي الجملة ٥ مرات زيين</p>
+    <div class="phrase-display" id="phrase-display"></div>
+    <div class="answer-btns">
+      <button class="btn-correct" onclick="submitAnswer(true)">صح علي 🫡</button>
+      <button class="btn-wrong" onclick="submitAnswer(false)">ما زبطت معي 😅</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div id="result-overlay">
+  <div class="result-box">
+    <span class="result-emoji" id="result-emoji">🎉</span>
+    <h2 class="result-title" id="result-title"></h2>
+    <button class="back-home-btn" onclick="goHome()">🏠</button>
+  </div>
+</div>
+
+<script>
+const PERSONS = [
+  {
+    name: "برده",
+    heartColor: ["#ff4d8d","#c2185b"],
+    invitation: "برده الحبيبة 💕\nالله يجعلكِ في ستره وحفظه من كل ما يؤذيكِ، ويلبسكِ ثوب العافية التي تلازمكِ أينما كنتِ، ويصرف عنكِ كل سوءٍ يمسّ قلبكِ أو روحك",
+    phrase: "خيط حرير على خيط خليل"
+  },
+  {
+    name: "عبير",
+    heartColor: ["#ff6b9d","#ad1457"],
+    invitation: "عبير الحبيبة 💕\nالله يجعل أيامكِ فواحةً بكل خير، ويسخّر لكِ من الأقدار أجملها، ويجعل أثركِ فيمن حولكِ كأثر الزهر، يبعث البهجة ويترك الذكرى الطيبة",
+    phrase: "فراش فراس مفروش"
+  },
+  {
+    name: "مليحة",
+    heartColor: ["#f48fb1","#880e4f"],
+    invitation: "مليحة الحبيبة 💕\nالله يكتب لكِ في كل طريقٍ تمشينه يسراً، ويصرف عنكِ وعورة الأيام، ويجعل أقداركِ القادمة تجري بما تحبين وتتمنين، بلا تعبٍ ولا عناء",
+    phrase: "لحم الحمام حلال ولحم الحمار حرام"
+  },
+  {
+    name: "جميلة",
+    heartColor: ["#ff4d94","#d81b7a"],
+    invitation: "جميلة الحبيبة 💕\nالله يفيض على حياتكِ من واسع كرمه، ويجعل البركة في وقتك، وفي عملك، وفي أثرك، ويرزقكِ من المسرات ما يملأ قلبكِ ويُغني روحك",
+    phrase: "خميس الخباز خبز خمس خبزات"
+  },
+  {
+    name: "ختمه",
+    heartColor: ["#ff6b9d","#c2185b"],
+    invitation: "ختمه الحبيبة 💕\nالله ينير لكِ دروبكِ بنورٍ من عنده، فتدركين الخير في وقته، وتتجنبين الزلل بحفظه، وتعيشين حياتكِ مطمئنةً، مرتاحة الخاطر والبال",
+    phrase: "طبق رطب مرق بقر"
+  },
+  {
+    name: "سعدية",
+    heartColor: ["#ff6090","#9c1f45"],
+    invitation: "سعدية الحبيبة 💕\nالله يجعل أيامكِ سلسلةً من البشائر التي تدهش قلبك، ويُعقب كل صبرٍ لكِ بفرجٍ عظيم، ويفتح لكِ خزائن رحمته التي لا تنفد",
+    phrase: "بسيطه وماتسبسطهاش وصعبه وماتصتصعبهاش"
+  },
+  {
+    name: "هدى",
+    heartColor: ["#ff4081","#9c0055"],
+    invitation: "هدى الحبيبة 💕\nالله يديم عليكِ صلاح حالك، ويجعل أمورك كلها جاريةً على ما تحبين، مُسخرةً لكِ بكل يُسر وتوفيق، دون تعبٍ أو عناء",
+    phrase: "قميص نفيسة نشف"
+  },
+  {
+    name: "امنه",
+    heartColor: ["#f06292","#ad1457"],
+    invitation: "امنه الحبيبة 💕\nالله يعيذكِ من غدر الأيام ومن فجائع القدر، ويجعل أيامكِ دافئة آمنة، محفوفة بحفظه الذي لا يغفل ولا ينام",
+    phrase: "حوش خميس خوش حوش"
+  },
+  {
+    name: "امال",
+    heartColor: ["#e91e8c","#880e4f"],
+    invitation: "امال الحبيبة 💕\nالله يرفع قدركِ في الدارين، ويجعل لكِ في كل محفلٍ قبولاً، وفي كل قلبٍ محبة، ويُنبت في طريقكِ ثماراً من الفرح تُنسيكِ عناء كل مجهود",
+    phrase: "عطوني غداي وغطو غداء عطيه"
+  },
+  {
+    name: "حصة",
+    heartColor: ["#ff80ab","#c2185b"],
+    invitation: "حصة الحبيبة 💕\nالله يجعل لكِ من كل ضيقٍ مخرجاً، ومن كل رزقٍ نصيباً وافراً، ويجعل حياتكِ محفوفة بالبركة التي تضاعف في عمركِ وأيامكِ وأثركِ",
+    phrase: "شمس تمشي وشمس مشمسة"
+  },
+  {
+    name: "عزه",
+    heartColor: ["#ff4d8d","#ad1457"],
+    invitation: "عزه الحبيبة 💕\nالله يجعل غناكِ في قلبك، وعزتكِ في إيمانك، ويصرف عنكِ الحاجة إلا إليه، ويحيطكِ بجميل ألطافه في كل لحظة تمر عليكِ",
+    phrase: "القصمان لبسوا قمصان وأكلوا قرصان"
+  }
+];
+
+let currentPerson = null;
+
+(function initStars() {
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  function createStars() {
+    stars = [];
+    const n = Math.floor((canvas.width * canvas.height) / 3000);
+    for (let i = 0; i < n; i++) {
+      stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+        r: Math.random()*1.4+0.3, a: Math.random(),
+        speed: Math.random()*0.008+0.002, phase: Math.random()*Math.PI*2 });
+    }
+  }
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height); t += 0.016;
+    for (const s of stars) {
+      const alpha = s.a*(0.5+0.5*Math.sin(t*s.speed*60+s.phase));
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(255,200,220,${alpha})`; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  resize(); createStars(); draw();
+  window.addEventListener('resize', () => { resize(); createStars(); });
+})();
+
+function spawnFloatHeart() {
+  const h = document.createElement('div');
+  h.className = 'float-heart';
+  h.textContent = ['💕','💗','💖','💓','🌸','✨'][Math.floor(Math.random()*6)];
+  h.style.left = Math.random()*100+'vw'; h.style.bottom = '-20px';
+  h.style.fontSize = (0.8+Math.random()*1.2)+'rem';
+  h.style.animationDuration = (5+Math.random()*5)+'s';
+  document.body.appendChild(h);
+  h.addEventListener('animationend', () => h.remove());
+}
+setInterval(spawnFloatHeart, 1200);
+
+function buildGrid() {
+  const grid = document.getElementById('hearts-grid');
+  grid.innerHTML = '';
+  PERSONS.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'heart-card';
+    card.onclick = () => openInvitation(i);
+    const [c1, c2] = p.heartColor;
+    card.innerHTML = `
+      <svg class="heart-svg" viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="hg${i}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:${c1}"/>
+            <stop offset="100%" style="stop-color:${c2}"/>
+          </linearGradient>
+        </defs>
+        <path d="M60 100 C60 100 5 65 5 32 C5 14 18 4 34 8 C44 11 53 18 60 26 C67 18 76 11 86 8 C102 4 115 14 115 32 C115 65 60 100 60 100Z" fill="url(#hg${i})"/>
+        <text x="60" y="52" text-anchor="middle" dominant-baseline="middle"
+          font-family="Tajawal,sans-serif" font-size="17" font-weight="900"
+          fill="rgba(255,255,255,0.97)">${p.name}</text>
+      </svg>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function openInvitation(idx) {
+  currentPerson = idx;
+  const p = PERSONS[idx];
+  document.getElementById('inv-text').textContent = p.invitation;
+  showPage('invitation');
+  spawnSparkles();
+}
+
+function startChallenge() {
+  updateChallengeUI();
+  showPage('challenge');
+}
+
+function updateChallengeUI() {
+  const p = PERSONS[currentPerson];
+  const display = document.getElementById('phrase-display');
+  display.innerHTML = '';
+  const single = document.createElement('span');
+  single.className = 'phrase-single';
+  single.textContent = '🎤 ' + p.phrase;
+  display.appendChild(single);
+}
+
+function submitAnswer(correct) {
+  const emoji = document.getElementById('result-emoji');
+  const title = document.getElementById('result-title');
+  if (correct) {
+    emoji.textContent = '🎉';
+    title.className = 'result-title success';
+    title.textContent = 'برافووو جبتيها صح 👏👏';
+    launchConfetti();
+  } else {
+    emoji.textContent = '😆';
+    title.className = 'result-title fail';
+    title.textContent = 'خيرها في غيرها';
+  }
+  document.getElementById('result-overlay').classList.add('active');
+}
+
+function goHome() {
+  document.getElementById('result-overlay').classList.remove('active');
+  currentPerson = null;
+  showPage('home');
+}
+
+function showPage(name) {
+  document.getElementById('page-home').style.display = 'none';
+  document.getElementById('page-invitation').classList.remove('active');
+  document.getElementById('page-challenge').classList.remove('active');
+  document.getElementById('back-arrow').classList.remove('visible');
+  if (name === 'home') {
+    document.getElementById('page-home').style.display = 'flex';
+  } else if (name === 'invitation') {
+    document.getElementById('page-invitation').classList.add('active');
+    document.getElementById('back-arrow').classList.add('visible');
+  } else if (name === 'challenge') {
+    document.getElementById('page-challenge').classList.add('active');
+    document.getElementById('back-arrow').classList.add('visible');
+  }
+  window.scrollTo(0,0);
+}
+
+function launchConfetti() {
+  const colors = ['#ff4d8d','#c2185b','#ff8fab','#f48fb1','#ffd6e7','#fff','#ffecb3'];
+  for (let i = 0; i < 90; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random()*100+'vw'; c.style.top = '-10px';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.width = (6+Math.random()*8)+'px'; c.style.height = (6+Math.random()*8)+'px';
+      c.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+      c.style.animationDuration = (2+Math.random()*2.5)+'s';
+      document.body.appendChild(c);
+      c.addEventListener('animationend', () => c.remove());
+    }, i*25);
+  }
+}
+
+function spawnSparkles() {
+  for (let i = 0; i < 14; i++) {
+    setTimeout(() => {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.style.left = (20+Math.random()*60)+'vw';
+      s.style.top = (15+Math.random()*70)+'vh';
+      s.style.fontSize = '1.5rem';
+      s.textContent = ['✨','💫','⭐','🌟','💕','🌸'][Math.floor(Math.random()*6)];
+      document.body.appendChild(s);
+      s.addEventListener('animationend', () => s.remove());
+    }, i*55);
+  }
+}
+
+buildGrid();
+</script>
+</body>
+</html>
